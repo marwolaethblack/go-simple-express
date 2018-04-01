@@ -87,6 +87,21 @@ func (a *App) Delete(path string, handlers ...func(w http.ResponseWriter, req *h
 	a.routes[path]["DELETE"] = handlers
 }
 
+//Patch handles a PATCH http request to the given path
+func (a *App) Patch(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func())) {
+	if a.routes == nil {
+		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+	}
+	if a.routes[path] == nil {
+		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+
+	}
+	if a.routes[path]["PATCH"] == nil {
+		a.routes[path]["PATCH"] = make([]func(w http.ResponseWriter, req *http.Request, stop func()), 5)
+	}
+	a.routes[path]["PATCH"] = handlers
+}
+
 func (a App) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path
 	method := req.Method
