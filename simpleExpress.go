@@ -10,17 +10,17 @@ import (
 
 //Routes is the type in which your types are stored
 //It is a map where the key is string and the value is another map whose key is a string and value is a slice of functions
-type Routes map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func())
+type Routes map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string))
 
 //MiddlewareHandler is the type your middleware functions passed to the app methods should be
-type MiddlewareHandler func(w http.ResponseWriter, req *http.Request, stop func())
+type MiddlewareHandler func(w http.ResponseWriter, req *http.Request, stop func(message string))
 
 type appmethods interface {
-	Get(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func()))
-	Post(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func()))
-	Put(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func()))
-	Delete(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func()))
-	Patch(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func()))
+	Get(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string)))
+	Post(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string)))
+	Put(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string)))
+	Delete(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string)))
+	Patch(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 }
 
 /*App is the type of the application with the relevant methods
@@ -31,76 +31,76 @@ type App struct {
 }
 
 //Get handles a GET http request to the given path
-func (a *App) Get(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func())) {
+func (a *App) Get(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string))) {
 	if a.routes == nil {
-		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 	}
 	if a.routes[path] == nil {
-		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 
 	}
 	if a.routes[path]["GET"] == nil {
-		a.routes[path]["GET"] = make([]func(w http.ResponseWriter, req *http.Request, stop func()), 5)
+		a.routes[path]["GET"] = make([]func(w http.ResponseWriter, req *http.Request, stop func(message string)), 5)
 	}
 	a.routes[path]["GET"] = handlers
 }
 
 //Post handles a POST http request to the given path
-func (a *App) Post(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func())) {
+func (a *App) Post(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string))) {
 	if a.routes == nil {
-		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 	}
 	if a.routes[path] == nil {
-		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 
 	}
 	if a.routes[path]["POST"] == nil {
-		a.routes[path]["POST"] = make([]func(w http.ResponseWriter, req *http.Request, stop func()), 5)
+		a.routes[path]["POST"] = make([]func(w http.ResponseWriter, req *http.Request, stop func(message string)), 5)
 	}
 	a.routes[path]["POST"] = handlers
 }
 
 //Put handles a PUT http request to the given path
-func (a *App) Put(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func())) {
+func (a *App) Put(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string))) {
 	if a.routes == nil {
-		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 	}
 	if a.routes[path] == nil {
-		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 
 	}
 	if a.routes[path]["PUT"] == nil {
-		a.routes[path]["PUT"] = make([]func(w http.ResponseWriter, req *http.Request, stop func()), 5)
+		a.routes[path]["PUT"] = make([]func(w http.ResponseWriter, req *http.Request, stop func(message string)), 5)
 	}
 	a.routes[path]["PUT"] = handlers
 }
 
 //Delete handles a DELETE http request to the given path
-func (a *App) Delete(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func())) {
+func (a *App) Delete(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string))) {
 	if a.routes == nil {
-		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 	}
 	if a.routes[path] == nil {
-		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 
 	}
 	if a.routes[path]["DELETE"] == nil {
-		a.routes[path]["DELETE"] = make([]func(w http.ResponseWriter, req *http.Request, stop func()), 5)
+		a.routes[path]["DELETE"] = make([]func(w http.ResponseWriter, req *http.Request, stop func(message string)), 5)
 	}
 	a.routes[path]["DELETE"] = handlers
 }
 
 //Patch handles a PATCH http request to the given path
-func (a *App) Patch(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func())) {
+func (a *App) Patch(path string, handlers ...func(w http.ResponseWriter, req *http.Request, stop func(message string))) {
 	if a.routes == nil {
-		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes = make(map[string]map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 	}
 	if a.routes[path] == nil {
-		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func()))
+		a.routes[path] = make(map[string][]func(w http.ResponseWriter, req *http.Request, stop func(message string)))
 
 	}
 	if a.routes[path]["PATCH"] == nil {
-		a.routes[path]["PATCH"] = make([]func(w http.ResponseWriter, req *http.Request, stop func()), 5)
+		a.routes[path]["PATCH"] = make([]func(w http.ResponseWriter, req *http.Request, stop func(message string)), 5)
 	}
 	a.routes[path]["PATCH"] = handlers
 }
@@ -111,13 +111,16 @@ func (a App) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	handlers := a.routes[path][method]
 
 	stopflag := false
-	stop := func() {
+	stopmessage := "Unauthorized access"
+	stop := func(message string) {
 		stopflag = true
+		stopmessage = message
 	}
 
 	if handlers != nil {
 		for _, fn := range handlers {
 			if stopflag {
+				http.Error(w, stopmessage, http.StatusForbidden)
 				break
 			}
 			fn(w, req, stop)
