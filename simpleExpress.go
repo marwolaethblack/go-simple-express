@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -130,7 +131,7 @@ func (a App) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 //Run starts the http server with the given port e.g ":8080", : is required
 func (a App) Run(port string) {
 	fmt.Printf("Server is running on localhost%s\n", port)
-	http.ListenAndServe(port, a)
+	log.Fatalln(http.ListenAndServe(port, a))
 }
 
 //GzipJSON gzips your data, converts it to json and sends it to the writer
