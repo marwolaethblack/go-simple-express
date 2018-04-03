@@ -31,18 +31,44 @@ func(w http.ResponseWriter, req *http.Request, stop func())
 ```
 All these paramaters (w, req, stop) will be passed in for you and you will have access to them in your function
 
-`stop()` Will stop the middleware chain execution but will not stop the current function, use an if else block
-
-Example
+MiddleWareHandler Example
 ```go
 type User struct {
   Fname string
   Lname string
 }
 
-func getUsers(w http.ResponseWriter, req *http.Request, stop func()) {
+func getUsers(w http.ResponseWriter, req *http.Request, stop func(message string)) {
   userdata := User{"John", "Smith"}
   express.GzipJSON(w, userdata)
+}
+```
+
+`stop(message string)` Will stop the middleware chain execution but will not stop the current function, use an if else block
+
+stop() Example
+```go
+type User struct {
+  Fname string
+  Lname string
+}
+
+func getUsers(w http.ResponseWriter, req *http.Request, stop func(message string)) {
+  userdata := User{"John", "Smith"}
+  
+  
+  
+  if !authorized() {
+    stop("Unauthorized access")
+  } else {
+    express.GzipJSON(w, userdata)
+  }
+  
+}
+
+func main() {
+  var app express.App
+  app.Run(":8080")
 }
 ```
 
