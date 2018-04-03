@@ -14,6 +14,8 @@ app.Post("/post", MiddlewareHandler)
 
 //Delete requests
 app.Delete("/delete", MiddlewareHandler)
+
+app.Run(":8080")
 ```
 And so on for PUT PATCH...
 
@@ -30,5 +32,21 @@ func(w http.ResponseWriter, req *http.Request, stop func())
 All these paramaters (w, req, stop) will be passed in for you and you will have access to them in your function
 
 `stop()` Will stop the middleware chain execution but will not stop the current function, use an if else block
+
+Example
+```go
+type User struct {
+  Fname string
+  Lname string
+}
+
+func getUsers(w http.ResponseWriter, req *http.Request, stop func()) {
+  userdata := User{"John", "Smith"}
+  express.GzipJSON(w, userdata)
+}
+```
+
+You can set headers, gzip, encode to json and send your data to the writer using the `GzipJSON(w http.ResponseWriter, data interface{})` function
+it accepts anything encodable to JSON with json.Marshall
 
 Lastly this was made just for fun and practice and should not be taken seriously
