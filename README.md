@@ -53,19 +53,20 @@ type User struct {
   Lname string
 }
 
-func getUsers(w http.ResponseWriter, req *http.Request, stop func(message string)) {
-  userdata := User{"John", "Smith"}
-  
+func authorizeRequest(w http.ResponseWriter, req *http.Request, stop func(message string)) {
   if !authorized() {
     stop("Unauthorized access")
-  } else {
-    express.GzipJSON(w, userdata)
   }
-  
+}
+
+func getUsers(w http.ResponseWriter, req *http.Request, stop func(message string)) {
+  userdata := User{"John", "Smith"}
+  express.GzipJSON(w, userdata)
 }
 
 func main() {
   var app express.App
+  app.Get("/users", authorizeRequest, getUsers)
   app.Run(":8080")
 }
 ```
