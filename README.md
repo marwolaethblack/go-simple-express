@@ -27,7 +27,7 @@ app.Delete("/delete", MiddlewareHandler1, MiddlewareHandler2, MiddlewareHandler3
 
 Your MiddlewareHandler func needs to be in the format
 ```go
-func(w http.ResponseWriter, req *http.Request, stop func())
+func(w http.ResponseWriter, req *http.Request, stop func(message string))
 ```
 All these paramaters (w, req, stop) will be passed in for you and you will have access to them in your function
 
@@ -55,8 +55,6 @@ type User struct {
 
 func getUsers(w http.ResponseWriter, req *http.Request, stop func(message string)) {
   userdata := User{"John", "Smith"}
-  
-  
   
   if !authorized() {
     stop("Unauthorized access")
