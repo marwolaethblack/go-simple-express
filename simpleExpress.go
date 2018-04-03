@@ -1,6 +1,8 @@
 package express
 
 import (
+	"compress/gzip"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -129,4 +131,15 @@ func (a App) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func (a App) Run(port string) {
 	fmt.Printf("Server is running on localhost%s\n", port)
 	http.ListenAndServe(port, a)
+}
+
+//GzipJSON gzips your data, converts it to json and sends it to the writer
+func GzipJSON(w http.ResponseWriter, data interface{}) {
+	w.Header().Add("Accept-Charset", "utf-8")
+	w.Header().Add("Content-Type", "application/json")
+	w.Header().Set("Content-Encoding", "gzip")
+
+	gz := gzip.NewWriter(w)
+	json.NewEncoder(gz).Encode(data)
+	gz.Close()
 }
